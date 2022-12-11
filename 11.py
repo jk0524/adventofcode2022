@@ -68,10 +68,10 @@ class Monkey:
 	def test(self, item):
 		return item % self.test_factor == 0
 
-	def do_round(self, monkey_map):
+	def do_round(self, monkey_map, common_d):
 		for item in self.items:
 			# print(item)
-			item = (self.inspect(item)) % 9699690
+			item = (self.inspect(item)) % common_d
 			# print(item)
 			target = self.true_target if self.test(item) else self.false_target
 			monkey_map[target].items.append(item)
@@ -87,15 +87,15 @@ def solve(lst):
 	for l in lst:
 		m = Monkey(l)
 		d[m.id] = m
+	common_d = reduce(mul, [m.test_factor for m in d.values()])
 	for j in range(10000):
 		print('round', j)
 		for i in sorted(d.keys()):
 			# print(i)
 			m = d[i]
-			m.do_round(d)
+			m.do_round(d, common_d)
 
 	cnts = sorted([m.cnt for m in d.values()])[::-1]
-	print(reduce(mul, [m.test_factor for m in d.values()]))
 	# print(d)
 	print(cnts)
 	r = cnts[0] * cnts[1]
